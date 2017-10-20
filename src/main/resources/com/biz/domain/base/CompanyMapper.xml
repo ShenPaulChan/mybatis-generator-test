@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biz.mapper.base.CompanyMapper">
+  <resultMap id="BaseResultMap" type="com.biz.domain.base.Company">
+    <id column="DEPART_ID" jdbcType="INTEGER" property="departId" />
+    <result column="DEPART_NAME" jdbcType="VARCHAR" property="departName" />
+    <result column="DEPART_CODE" jdbcType="VARCHAR" property="departCode" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    DEPART_ID, DEPART_NAME, DEPART_CODE
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from company
+    where DEPART_ID = #{departId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from company
+    where DEPART_ID = #{departId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.biz.domain.base.Company"  >
+    <selectKey keyProperty="departId" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into company (DEPART_NAME, DEPART_CODE)
+    values (#{departName,jdbcType=VARCHAR}, #{departCode,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.biz.domain.base.Company">
+    <selectKey keyProperty="departId" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into company
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="departName != null">
+        DEPART_NAME,
+      </if>
+      <if test="departCode != null">
+        DEPART_CODE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="departName != null">
+        #{departName,jdbcType=VARCHAR},
+      </if>
+      <if test="departCode != null">
+        #{departCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.biz.domain.base.Company">
+    update company
+    <set>
+      <if test="departName != null">
+        DEPART_NAME = #{departName,jdbcType=VARCHAR},
+      </if>
+      <if test="departCode != null">
+        DEPART_CODE = #{departCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where DEPART_ID = #{departId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.biz.domain.base.Company">
+    update company
+    set DEPART_NAME = #{departName,jdbcType=VARCHAR},
+      DEPART_CODE = #{departCode,jdbcType=VARCHAR}
+    where DEPART_ID = #{departId,jdbcType=INTEGER}
+  </update>
+</mapper>
